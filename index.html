@@ -214,6 +214,7 @@
       const [editNoteId, setEditNoteId] = useState(null);
       const [noteInput, setNoteInput] = useState("");
       const [reportView, setReportView] = useState("current");
+      const [reportSubView, setReportSubView] = useState("monthly");
       const [expenseForm, setExpenseForm] = useState({ name: "", amount: "", category: categories[0], date: new Date().toISOString().split("T")[0] });
 
       const currentWeekKey = getCurrentWeekKey();
@@ -473,13 +474,13 @@
                       <>
                         <div style={{ display: "flex", gap: "6px", marginBottom: "16px" }}>
                           {["daily", "weekly", "monthly"].map(v => (
-                            <button key={v} onClick={() => setReportView(v)} style={{ flex: 1, padding: "9px", border: "none", borderRadius: "10px", background: reportView === v ? "rgba(248,113,113,0.25)" : "rgba(255,255,255,0.06)", color: reportView === v ? "#fca5a5" : "rgba(255,255,255,0.55)", fontWeight: 800, fontSize: "12px", cursor: "pointer", fontFamily: "'Nunito', sans-serif" }}>
+                            <button key={v} onClick={() => setReportSubView(v)} style={{ flex: 1, padding: "9px", border: "none", borderRadius: "10px", background: reportSubView === v ? "rgba(248,113,113,0.25)" : "rgba(255,255,255,0.06)", color: reportSubView === v ? "#fca5a5" : "rgba(255,255,255,0.55)", fontWeight: 800, fontSize: "12px", cursor: "pointer", fontFamily: "'Nunito', sans-serif" }}>
                               {v.charAt(0).toUpperCase() + v.slice(1)}
                             </button>
                           ))}
                         </div>
                         {(() => {
-                          const filtered = reportView === "daily" ? getDailyExpenses() : reportView === "weekly" ? getWeeklyExpenses() : expenses;
+                          const filtered = reportSubView === "daily" ? getDailyExpenses() : reportSubView === "weekly" ? getWeeklyExpenses() : expenses;
                           const total = filtered.reduce((s, e) => s + e.amount, 0);
                           const cats = {};
                           filtered.forEach(e => { cats[e.category] = (cats[e.category] || 0) + e.amount; });
@@ -609,7 +610,7 @@
                 { id: "report", icon: "📊", label: "Report" },
                 { id: "savings", icon: "🏦", label: "Savings" },
               ].map(nav => (
-                <button key={nav.id} onClick={() => { setScreen(nav.id); if (nav.id === "report") setReportView("current"); }} style={{ flex: 1, background: "none", border: "none", color: screen === nav.id ? "#f472b6" : "rgba(255,255,255,0.32)", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: "4px", padding: "8px 4px", fontFamily: "'Nunito', sans-serif" }}>
+                <button key={nav.id} onClick={() => { setScreen(nav.id); if (nav.id === "report") { setReportView("current"); setReportSubView("monthly"); } }} style={{ flex: 1, background: "none", border: "none", color: screen === nav.id ? "#f472b6" : "rgba(255,255,255,0.32)", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: "4px", padding: "8px 4px", fontFamily: "'Nunito', sans-serif" }}>
                   <span style={{ fontSize: "21px" }}>{nav.icon}</span>
                   <span style={{ fontSize: "10px", fontWeight: 800, letterSpacing: "0.2px" }}>{nav.label}</span>
                 </button>
